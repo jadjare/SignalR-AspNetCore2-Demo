@@ -1,0 +1,47 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Signalr AspNetCore 2.0 Most Basic Demo";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div id="chat-area" class="col-lg-5">
+
+        <div class="input-group">
+            <input type="text" id="new-message" placeholder="Type a message to send" class="form-control" />
+            <span class="input-group-btn">
+                <button type="button" id="send-message" class="btn btn-default">Send Message!</button>
+            </span>
+        </div>
+        <ul id="messages"></ul>
+
+    </div>
+</div>
+
+<script src="~/lib/signalr/signalr-client.js"></script>
+<script>
+
+    let transportType = signalR.TransportType.ServerSentEvents;// signalR.TransportType.WebSockets;
+    let logger = new signalR.ConsoleLogger(signalR.LogLevel.Information);
+    let http = new signalR.HttpConnection(`http://${document.location.host}/demo`, { transport: transportType, logger: logger });
+    let connection = new signalR.HubConnection(http, logger);
+
+    connection.start();
+
+    connection.on('messageSent', message => { appendMessage(message); });
+    document.getElementById('send-message').addEventListener('click', event => sendMessage());
+
+    function sendMessage() {
+        let data = document.getElementById('new-message').value;
+        connection.invoke('sendMessage', data).catch(err => alert(err));  
+    }
+
+    function appendMessage(text) {
+        let child = document.createElement('li');
+
+        child.innerText = text;
+        document.getElementById('messages').appendChild(child);
+    };
+
+</script>
