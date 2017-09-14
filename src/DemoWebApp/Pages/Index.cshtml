@@ -22,7 +22,7 @@
 <script src="~/lib/signalr/signalr-client.js"></script>
 <script>
 
-    let transportType = signalR.TransportType.ServerSentEvents;// signalR.TransportType.WebSockets;
+    let transportType = signalR.TransportType.WebSockets; //signalR.TransportType.ServerSentEvents;//
     let logger = new signalR.ConsoleLogger(signalR.LogLevel.Information);
     let http = new signalR.HttpConnection(`http://${document.location.host}/demo`, { transport: transportType, logger: logger });
     let connection = new signalR.HubConnection(http, logger);

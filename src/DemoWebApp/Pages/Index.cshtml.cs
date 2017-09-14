@@ -40,7 +40,7 @@ namespace DemoWebApp.Pages
 
                 hub.Clients = _hubContext.Clients;
 
-                await Task.Delay(20000);
+                await Task.Delay(5000);
                 await hub.SendMessage($"New client calling. It's {DateTime.Now:f}");
             }
 
