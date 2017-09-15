@@ -41,7 +41,8 @@
 
     function sendMessage() {
         var data = document.getElementById('new-message').value;
-        connection.invoke('sendMessage', data).catch(err => alert(err));  
+        connection.invoke('sendMessage', data).catch(err => alert(err));
+        document.getElementById('new-message').value = "";
     }
 
     function appendMessage(text) {
