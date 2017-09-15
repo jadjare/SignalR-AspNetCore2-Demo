@@ -22,10 +22,10 @@
 <script src="~/lib/signalr/signalr-client.js"></script>
 <script>
 
-    let transportType = signalR.TransportType.WebSockets; //signalR.TransportType.ServerSentEvents;//
-    let logger = new signalR.ConsoleLogger(signalR.LogLevel.Information);
-    let http = new signalR.HttpConnection(`http://${document.location.host}/demo`, { transport: transportType, logger: logger });
-    let connection = new signalR.HubConnection(http, logger);
+    var transportType = signalR.TransportType.WebSockets; //signalR.TransportType.ServerSentEvents;//
+    var logger = new signalR.ConsoleLogger(signalR.LogLevel.Information);
+    var http = new signalR.HttpConnection(`http://${document.location.host}/demo`, { transport: transportType, logger: logger });
+    var connection = new signalR.HubConnection(http, logger);
 
     connection.start();
 
@@ -33,12 +33,12 @@
     document.getElementById('send-message').addEventListener('click', event => sendMessage());
 
     function sendMessage() {
-        let data = document.getElementById('new-message').value;
+        var data = document.getElementById('new-message').value;
         connection.invoke('sendMessage', data).catch(err => alert(err));  
     }
 
     function appendMessage(text) {
-        let child = document.createElement('li');
+        var child = document.createElement('li');
 
         child.innerText = text;
         document.getElementById('messages').appendChild(child);
