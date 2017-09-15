@@ -12,14 +12,11 @@ namespace DemoWebApp.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IServiceProvider _serviceProvider;
-        private IHubContext<DemoHub> _hubContext;
+        private readonly IHubContext<DemoHub> _demoHubContext;
 
-        public IndexModel(IServiceScopeFactory serviceScopeFactory, IServiceProvider serviceProvider)
+        public IndexModel(IHubContext<DemoHub> demoHubContext)
         {
-            _serviceScopeFactory = serviceScopeFactory;
-            _serviceProvider = serviceProvider;
+            _demoHubContext = demoHubContext;
         }
 
         public void OnGet()
@@ -31,20 +28,8 @@ namespace DemoWebApp.Pages
 
         public async Task BroadcastNewClientMessage()
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var hubActivator = scope.ServiceProvider.GetRequiredService<IHubActivator<DemoHub>>();
-                var hub = hubActivator.Create();
-                if (_hubContext == null)
-                    _hubContext = _serviceProvider.GetRequiredService<IHubContext<DemoHub>>();
-
-                hub.Clients = _hubContext.Clients;
-
-                await Task.Delay(5000);
-                await hub.SendMessage($"New client calling. It's {DateTime.Now:f}");
-            }
-
-
+            await Task.Delay(5000);
+            await _demoHubContext.Clients.All.InvokeAsync("messageSent", $"New client calling. It's {DateTime.Now:f}"); //See advice here, https://github.com/aspnet/SignalR/issues/182, with regard to creating a common hub methods implementation.  To keep things simple this advice isn't implemented here
         }
     }
 }
