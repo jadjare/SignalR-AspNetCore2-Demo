@@ -8,20 +8,20 @@
 <div class="row">
     <div id="chat-area" class="col-lg-5">
 
-        <div class="input-group">
-            <input type="text" id="new-message" placeholder="Type a message to send" class="form-control" />
-            <span class="input-group-btn">
-                <button type="button" id="send-message" class="btn btn-default">Send Message!</button>
-            </span>
-        </div>
+        <form id="message-form" target="#">
+            <div class="input-group">
+                <input type="text" id="new-message" placeholder="Type a message to send" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="submit" id="send-message" class="btn btn-default">Send Message!</button>
+                </span>
+            </div>
+        </form>
         <ul id="messages"></ul>
-
     </div>
 </div>
 
 <script src="~/lib/signalr/signalr-client.js"></script>
 <script>
-    var ENTER_KEY_CODE = 13;
     var transportType = signalR.TransportType.WebSockets; //signalR.TransportType.ServerSentEvents;//
     var logger = new signalR.ConsoleLogger(signalR.LogLevel.Information);
     var http = new signalR.HttpConnection(`http://${document.location.host}/demo`, { transport: transportType, logger: logger });
@@ -30,19 +30,14 @@
     connection.start();
 
     connection.on('messageSent', message => { appendMessage(message); });
-    document.getElementById('send-message').addEventListener('click', event => sendMessage());
-    document.getElementById('new-message').addEventListener('keypress', event => checkforEnterkey(event));
-
-    function checkforEnterkey(e) {
-        if (e && e.keyCode === ENTER_KEY_CODE) {
-            sendMessage();
-        }
-    }
+    document.getElementById('message-form').addEventListener('submit', event => { event.preventDefault(); sendMessage(); });
 
     function sendMessage() {
-        var data = document.getElementById('new-message').value;
-        connection.invoke('sendMessage', data).catch(err => alert(err));
-        document.getElementById('new-message').value = "";
+        var messageInput = document.getElementById('new-message');
+
+        connection.invoke('sendMessage', messageInput.value)
+            .then(messageInput.value = "")
+            .catch(err => alert(err));
     }
 
     function appendMessage(text) {
