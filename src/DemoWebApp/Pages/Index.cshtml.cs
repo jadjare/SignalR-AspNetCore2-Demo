@@ -29,7 +29,7 @@ namespace DemoWebApp.Pages
         public async Task BroadcastNewClientMessage()
         {
             await Task.Delay(5000);
-            await _demoHubContext.Clients.All.InvokeAsync("messageSent", $"New client calling. It's {DateTime.Now:f}"); //See advice here, https://github.com/aspnet/SignalR/issues/182, with regard to creating a common hub methods implementation.  To keep things simple this advice isn't implemented here
+            await _demoHubContext.Clients.All.InvokeAsync("messageSent", $"New client calling ({this.Request.Host.Host}). It's {DateTime.Now:f}"); //See advice here, https://github.com/aspnet/SignalR/issues/182, with regard to creating a common hub methods implementation.  To keep things simple this advice isn't implemented here
         }
     }
 }
