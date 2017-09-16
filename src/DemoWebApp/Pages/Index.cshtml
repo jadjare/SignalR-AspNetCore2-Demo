@@ -29,7 +29,8 @@
 
     connection.start();
 
-    connection.on('messageSent', message => { appendMessage(message); });
+    connection.on('messageSent', message => { processIncomingMessage(message); });
+
     document.getElementById('message-form').addEventListener('submit', event => { event.preventDefault(); sendMessage(); });
 
     function sendMessage() {
@@ -40,11 +41,11 @@
             .catch(err => alert(err));
     }
 
-    function appendMessage(text) {
-        var child = document.createElement('li');
+    function processIncomingMessage(message) {
+        var messageItem = document.createElement('li');
 
-        child.innerText = text;
-        document.getElementById('messages').appendChild(child);
+        messageItem.innerText = message;
+        document.getElementById('messages').appendChild(messageItem);
     };
 
 </script>
